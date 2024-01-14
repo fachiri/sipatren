@@ -13,24 +13,10 @@ import {
 import FormInput from "../../../../components/form/FormInput";
 import FormSelect from "../../../../components/form/FormSelect";
 import { toast } from "react-toastify";
+import { validateTeacher } from "../../../../utils/validation";
+import TeacherForm from "./TeacherForm";
 
 export default function TeacherCreate() {
-  const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes`, fetcher)
-
-  const getClassOptions = () => {
-    let classes = [];
-
-    if (classData?.data?.rows) {
-      classes = classData.data.rows.map((classItem) => ({
-        value: classItem.uuid,
-        label: classItem.name,
-      }));
-    }
-
-    return classes;
-  };
-
-
   return (
     <>
       <DashboardLayout
@@ -60,64 +46,11 @@ export default function TeacherCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ nama: '', nuptk: '', nip: '', jabatan: '', total_jtm: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', no_hp: '' }}
-              validate={values => {
-                const errors = {};
-
-                if (!values.nama) {
-                  errors.nama = 'Nama harus diisi';
-                }
-
-                if (!values.nuptk) {
-                  errors.nuptk = 'NUPTK harus diisi';
-                } else if (!/^\d+$/.test(values.nuptk)) {
-                  errors.nuptk = 'NUPTK harus berupa angka tanpa spasi';
-                }
-
-                if (!values.nip) {
-                  errors.nip = 'NIP harus diisi';
-                } else if (!/^\d+$/.test(values.nip)) {
-                  errors.nip = 'NIP harus berupa angka tanpa spasi';
-                }
-
-                if (!values.jabatan) {
-                  errors.jabatan = 'Jabatan harus diisi';
-                }
-
-                if (!values.total_jtm) {
-                  errors.total_jtm = 'Total JTM harus diisi';
-                } else if (!/^\d+$/.test(values.total_jtm)) {
-                  errors.total_jtm = 'Total JTM tidak valid';
-                }
-
-                if (!values.jk) {
-                  errors.jk = 'Jenis Kelamin harus diisi';
-                }
-
-                if (!values.tempat_lahir) {
-                  errors.tempat_lahir = 'Tempat Lahir harus diisi';
-                }
-
-                if (!values.tanggal_lahir) {
-                  errors.tanggal_lahir = 'Tanggal Lahir harus diisi';
-                }
-
-                if (!values.alamat) {
-                  errors.alamat = 'Alamat harus diisi';
-                }
-
-                if (!values.no_hp) {
-                  errors.no_hp = 'Nomor HP harus diisi';
-                } else if (!/^\d+$/.test(values.no_hp)) {
-                  errors.no_hp = 'Nomor HP tidak valid';
-                }
-
-                return errors;
-              }}
+              initialValues={{ nama: '', nuptk: '', nip: '', jabatan: '', total_jtm: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', no_hp: '', status_pegawai: '' }}
+              validate={validateTeacher}
               onSubmit={async (values, actions) => {
                 try {
                   values.username = values.nip
-                  values.status_pegawai = "AKTIF"
 
                   const { data: response } = await axios.post('/master/teachers', values);
 
@@ -134,68 +67,7 @@ export default function TeacherCreate() {
             >
               {(props) => (
                 <Form>
-                  <FormInput
-                    label="Nama Lengkap"
-                    name="nama"
-                    placeholder="Nama Lengkap"
-                  />
-                  <FormSelect
-                    label="Jabatan"
-                    name="jabatan"
-                    placeholder="Pilih Jabatan"
-                    options={[
-                      { value: 'Kepala Sekolah', label: 'Kepala Sekolah' },
-                      { value: 'Wakil Kepala Sekolah', label: 'Wakil Kepala Sekolah' },
-                      { value: 'Guru', label: 'Guru' },
-                      { value: 'Staf', label: 'Staf' },
-                    ]}
-                  />
-                  <FormInput
-                    label="NUPTK"
-                    name="nuptk"
-                    placeholder="(NUPTK) Nomor Unik Pendidik dan Tenaga Kependidikan"
-                  />
-                  <FormInput
-                    label="NIP"
-                    name="nip"
-                    placeholder="NIP (Nomor Induk Pegawai)"
-                  />
-                  <FormSelect
-                    label="Jenis Kelamin"
-                    name="jk"
-                    placeholder="Pilih jenis kelamin"
-                    options={[
-                      { value: 'Laki-laki', label: 'Laki-laki' },
-                      { value: 'Perempuan', label: 'Perempuan' }
-                    ]}
-                  />
-                  <FormInput
-                    label="Tempat Lahir"
-                    name="tempat_lahir"
-                    placeholder="Tempat Lahir"
-                  />
-                  <FormInput
-                    label="Tanggal Lahir"
-                    name="tanggal_lahir"
-                    placeholder="Tanggal Lahir"
-                    type="date"
-                  />
-                  <FormInput
-                    label="Alamat"
-                    name="alamat"
-                    placeholder="Alamat Lengkap"
-                    type="textarea"
-                  />
-                  <FormInput
-                    label="Nomor HP"
-                    name="no_hp"
-                    placeholder="Nomor HP"
-                  />
-                  <FormInput
-                    label="Total JTM"
-                    name="total_jtm"
-                    placeholder="Total JTM"
-                  />
+                  <TeacherForm />
                   <Button
                     mt={4}
                     colorScheme='teal'

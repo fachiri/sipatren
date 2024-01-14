@@ -13,7 +13,7 @@ import {
 import FormInput from "../../../../components/form/FormInput";
 import FormSelect from "../../../../components/form/FormSelect";
 import { toast } from "react-toastify";
-import validateSantri from "../../../../utils/validation";
+import { validateSantri } from "../../../../utils/validation";
 
 export default function SantriCreate() {
   const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes`, fetcher)

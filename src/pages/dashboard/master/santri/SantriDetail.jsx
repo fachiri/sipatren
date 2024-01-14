@@ -18,7 +18,7 @@ import axios from "../../../../utils/axios"
 import FormEdit from "../../../../components/form/FormEdit";
 import FormInput from "../../../../components/form/FormInput";
 import FormSelect from "../../../../components/form/FormSelect";
-import validateSantri from "../../../../utils/validation";
+import { validateSantri } from "../../../../utils/validation";
 
 export default function SantriDetail() {
   const modalDelete = useDisclosure()
@@ -59,7 +59,7 @@ export default function SantriDetail() {
             link: '/dashboard/master/santri'
           },
           {
-            label: studentData?.data?.user?.username,
+            label: '@' + studentData?.data?.user?.username,
             link: '#'
           },
         ]}

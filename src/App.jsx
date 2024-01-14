@@ -9,6 +9,8 @@ import AuthRoutes from "./routes/AuthRoutes"
 import SantriDetail from "./pages/dashboard/master/santri/SantriDetail"
 import ClassCreate from "./pages/dashboard/master/class/ClassCreate"
 import TeacherCreate from "./pages/dashboard/master/teacher/TeacherCreate"
+import TeacherIndex from "./pages/dashboard/master/teacher/TeacherIndex"
+import TeacherDetail from "./pages/dashboard/master/teacher/TeacherDetail"
 
 export default function App() {
   return (
@@ -24,7 +26,9 @@ export default function App() {
           <Route path="/dashboard/master/santri" element={<SantriIndex />} />
           <Route path="/dashboard/master/santri/create" element={<SantriCreate />} />
           <Route path="/dashboard/master/santri/detail/:uuid" element={<SantriDetail />} />
+          <Route path="/dashboard/master/teachers" element={<TeacherIndex />} />
           <Route path="/dashboard/master/teachers/create" element={<TeacherCreate />} />
+          <Route path="/dashboard/master/teachers/detail/:uuid" element={<TeacherDetail />} />
           <Route path="/dashboard/master/classes/create" element={<ClassCreate />} />
         </Route>
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
