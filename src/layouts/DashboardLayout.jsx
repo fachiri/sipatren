@@ -4,9 +4,7 @@ import {
   Flex,
   Icon,
   Text,
-  Stack,
   Image,
-  Button,
   Heading,
   Drawer,
   DrawerContent,
@@ -19,22 +17,23 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  MenuGroup,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon
+  AccordionIcon,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
 } from '@chakra-ui/react';
-import { FaArrowCircleRight, FaBell, FaCalendarCheck, FaChartPie, FaDatabase, FaFile, FaHome } from 'react-icons/fa';
-import { AiOutlineTeam, AiOutlineHome } from 'react-icons/ai';
-import { BsFolder2, BsCalendarCheck } from 'react-icons/bs';
+import { FaCalendarCheck, FaChartPie, FaDatabase, FaFile, FaHome } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
-import { RiFlashlightFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import logo from '../assets/images/logo.png'
+import { Fragment } from 'react';
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children, breadcrumbs, title, actions }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
@@ -68,9 +67,9 @@ export default function DashboardLayout({ children }) {
           />
 
           <Flex align="center">
-            <Flex borderRadius="50%" border="2px" borderColor="gray.500" w={8} h={8} alignItems="center" justifyContent="center">
+            {/* <Flex borderRadius="50%" border="2px" borderColor="gray.500" w={8} h={8} alignItems="center" justifyContent="center">
               <Icon color="gray.500" as={FaBell} cursor="pointer" />
-            </Flex>
+            </Flex> */}
             <Menu>
               <MenuButton ml="4">
                 <Avatar
@@ -92,6 +91,40 @@ export default function DashboardLayout({ children }) {
         </Flex>
 
         <Box as="main" p={6} minH="25rem" bg={useColorModeValue('auto', 'gray.800')}>
+          <Flex flexDirection={{ base: "column", md: "row" }} justifyContent={{ md: "space-between" }} alignItems="flex-start" mb={5}>
+            <Flex flexDirection="column">
+              <Heading as='h3' size='lg'>
+                {title}
+              </Heading>
+              <Breadcrumb spacing='8px'>
+                {breadcrumbs.map((item, idx) => (
+                  <BreadcrumbItem key={idx} isCurrentPage={breadcrumbs.length - 1 === idx}>
+                    <BreadcrumbLink as={Link} to={item.link}>{item.label}</BreadcrumbLink>
+                  </BreadcrumbItem>
+                ))}
+              </Breadcrumb>
+            </Flex>
+            {actions && (
+              <Flex mt={{ base: 3, md: 0 }} gap={2}>
+                {actions.map((item, idx) => (
+                  <Fragment key={idx}>
+                    {item.link && (
+                      <Link to={item.link}>
+                        <Button leftIcon={item.icon} colorScheme={item.color} variant='solid' size={{ base: "sm", md: "md"}}>
+                          {item.label}
+                        </Button>
+                      </Link>
+                    )}
+                    {item.onClick && (
+                      <Button onClick={item.onClick} leftIcon={item.icon} colorScheme={item.color} variant='solid' size="sm">
+                        {item.label}
+                      </Button>
+                    )}
+                  </Fragment>
+                ))}
+              </Flex>
+            )}
+          </Flex>
           {children}
         </Box>
       </Box>
@@ -132,12 +165,16 @@ const SidebarContent = ({ ...props }) => (
         <NavItem icon={FaHome} label="Dashboard" />
       </Link>
       <NavSubItem
-        label="Master Data"
+        label="Master"
         icon={FaDatabase}
         items={[
           {
-            link: '/dashboard/master/users',
-            label: 'Pengguna'
+            link: '/dashboard/master/santri',
+            label: 'Santri'
+          },
+          {
+            link: '/dashboard/master/teachers',
+            label: 'Guru'
           },
           {
             link: '/dashboard/master/classes',
