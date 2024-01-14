@@ -91,3 +91,27 @@ export function validateTeacher(values) {
 
   return errors;
 }
+
+export function validateClass(values) {
+  const errors = {};
+
+  if (!values.name) {
+    errors.name = 'Nama Kelas harus diisi';
+  }
+
+  if (!values.teacher_uuid) {
+    errors.teacher_uuid = 'Wali Kelas harus diisi';
+  }
+
+  return errors;
+}
+
+export function validateSubject(values) {
+  const errors = {};
+
+  if (!values.name) {
+    errors.name = 'Nama Mata Pelajaran';
+  }
+
+  return errors;
+}

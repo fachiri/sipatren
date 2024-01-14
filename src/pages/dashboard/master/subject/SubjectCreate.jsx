@@ -9,14 +9,14 @@ import {
   Heading,
 } from '@chakra-ui/react'
 import { toast } from "react-toastify";
-import { validateClass } from "../../../../utils/validation";
-import ClassForm from "./ClassForm";
+import { validateSubject } from "../../../../utils/validation";
+import SubjectForm from "./SubjectForm";
 
-export default function ClassCreate() {
+export default function SubjectCreate() {
   return (
     <>
       <DashboardLayout
-        title="Tambah Kelas"
+        title="Tambah Mata Pelajaran"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -27,8 +27,8 @@ export default function ClassCreate() {
             link: '#'
           },
           {
-            label: 'Kelas',
-            link: '/dashboard/master/classes'
+            label: 'Mata Pelajaran',
+            link: '/dashboard/master/subjects'
           },
           {
             label: 'Tambah Data',
@@ -38,15 +38,15 @@ export default function ClassCreate() {
       >
         <Card>
           <CardHeader>
-            <Heading as='h4' size='md'>Form Tambah Kelas</Heading>
+            <Heading as='h4' size='md'>Form Tambah Mata Pelajaran</Heading>
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ name: '', teacher_uuid: '' }}
-              validate={validateClass}
+              initialValues={{ name: '' }}
+              validate={validateSubject}
               onSubmit={async (values, actions) => {
                 try {
-                  const { data: response } = await axios.post('/master/classes', values);
+                  const { data: response } = await axios.post('/master/subjects', values);
 
                   toast.success(response.message)
                   actions.resetForm()
@@ -61,7 +61,7 @@ export default function ClassCreate() {
             >
               {(props) => (
                 <Form>
-                  <ClassForm />
+                  <SubjectForm />
                   <Button
                     mt={4}
                     colorScheme='teal'

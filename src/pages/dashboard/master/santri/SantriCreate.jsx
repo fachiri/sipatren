@@ -31,7 +31,6 @@ export default function SantriCreate() {
     return classes;
   };
 
-
   return (
     <>
       <DashboardLayout
