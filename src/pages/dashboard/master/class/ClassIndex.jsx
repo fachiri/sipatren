@@ -66,7 +66,7 @@ export default function ClassIndex() {
                   {classData?.data?.rows.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.name}</Td>
-                      <Td>{item.teacher.nip}</Td>
+                      <Td>{item.teacher?.user?.nama}</Td>
                       <Td>
                         <Link to={"detail/" + item.uuid}>
                           <Button leftIcon={<FaList />} colorScheme='teal' variant='solid' size='sm'>Detail</Button>

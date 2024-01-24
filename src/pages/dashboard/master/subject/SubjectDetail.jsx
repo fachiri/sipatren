@@ -59,7 +59,7 @@ export default function SubjectDetail() {
                 modal={modalEdit}
                 initialValues={{
                   name: subjectData?.data?.name,
-                  // teacher_uuid: subjectData?.data?.teacher?.uuid,
+                  teacher_uuid: subjectData?.data?.teacher?.uuid,
                 }}
                 validate={validateSubject}
                 onSubmit={async (values, actions) => {
@@ -102,13 +102,13 @@ export default function SubjectDetail() {
             <ListDetail
               items={[
                 { label: 'Mata Pelajaran', value: subjectData?.data?.name },
-                // { 
-                //   label: 'Pengajaj', 
-                //   value: 
-                //     <Link to={`/dashboard/master/teachers/detail/${subjectData?.data?.teacher?.uuid}`}>
-                //       <Text color='teal'>{subjectData?.data?.teacher?.nip}</Text>
-                //     </Link> 
-                // },
+                { 
+                  label: 'Pengajar', 
+                  value: 
+                    <Link to={`/dashboard/master/teachers/detail/${subjectData?.data?.teacher?.uuid}`} style={{ color: 'teal' }}>
+                      {subjectData?.data?.teacher?.user?.nama}
+                    </Link> 
+                },
               ]}
             />
           </CardBody>

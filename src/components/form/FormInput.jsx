@@ -1,7 +1,7 @@
 import { FormControl, FormErrorMessage, FormLabel, Input, Textarea } from "@chakra-ui/react";
 import { Field } from "formik";
 
-export default function FormInput({ label, name, placeholder, type, defaultValue }) {
+export default function FormInput({ label, name, placeholder, type, maxLength }) {
   return (
     <>
       <Field name={name}>
@@ -11,7 +11,7 @@ export default function FormInput({ label, name, placeholder, type, defaultValue
             {type == 'textarea' ?
               <Textarea {...field} placeholder={placeholder} />
               :
-              <Input {...field} placeholder={placeholder} type={type ?? "text"} />
+              <Input {...field} maxLength={maxLength} placeholder={placeholder} type={type ?? "text"} />
             }
             <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
           </FormControl>

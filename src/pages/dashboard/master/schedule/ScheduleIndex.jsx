@@ -18,13 +18,13 @@ import { Link } from "react-router-dom";
 import fetcher from "../../../../utils/fetcher"
 import useSWR from 'swr'
 
-export default function SubjectIndex() {
-  const { data: subjectData, error: subjectError, isLoading: subjectIsLoading } = useSWR(`/master/subjects`, fetcher)
+export default function ScheduleIndex() {
+  const { data: scheduleData, error: scheduleError, isLoading: scheduleIsLoading } = useSWR(`/master/schedules`, fetcher)
 
   return (
     <>
       <DashboardLayout
-        title="Master Mata Pelajaran"
+        title="Master Jadwal"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -35,7 +35,7 @@ export default function SubjectIndex() {
             link: '#'
           },
           {
-            label: 'Mata Pelajaran',
+            label: 'Jadwal',
             link: '#'
           },
         ]}
@@ -50,23 +50,28 @@ export default function SubjectIndex() {
       >
         <Card>
           <CardHeader>
-            <Heading size='md'>Daftar Mata Pelajaran</Heading>
+            <Heading size='md'>Daftar Jadwal</Heading>
           </CardHeader>
           <CardBody>
             <TableContainer>
               <Table variant='striped' colorScheme='gray'>
                 <Thead>
                   <Tr>
+                    <Th>Hari</Th>
+                    <Th>Mulai</Th>
+                    <Th>Selesai</Th>
+                    <Th>Kelas</Th>
                     <Th>Mata Pelajaran</Th>
-                    <Th>Pengajar</Th>
-                    <Th>Aksi</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {subjectData?.data?.rows.map((item, idx) => (
+                  {scheduleData?.data?.rows.map((item, idx) => (
                     <Tr key={idx}>
-                      <Td>{item.name}</Td>
-                      <Td>{item.teacher?.user?.nama}</Td>
+                      <Td>{item.day}</Td>
+                      <Td>{item.start}</Td>
+                      <Td>{item.end}</Td>
+                      <Td>{item.class?.name}</Td>
+                      <Td>{item.subject?.name}</Td>
                       <Td>
                         <Link to={"detail/" + item.uuid}>
                           <Button leftIcon={<FaList />} colorScheme='teal' variant='solid' size='sm'>Detail</Button>

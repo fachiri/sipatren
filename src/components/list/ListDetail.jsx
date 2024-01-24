@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 export default function ListDetail({ items }) {
   return (
@@ -10,7 +10,6 @@ export default function ListDetail({ items }) {
               <Text>{item.label}</Text>
               <Text fontWeight="bold">{item.value}</Text>
             </Flex>
-            <Divider />
           </Box>
         ))}
       </Flex>

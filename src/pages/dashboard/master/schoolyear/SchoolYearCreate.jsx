@@ -9,14 +9,14 @@ import {
   Heading,
 } from '@chakra-ui/react'
 import { toast } from "react-toastify";
-import { validateSubject } from "../../../../utils/validation";
-import SubjectForm from "./SubjectForm";
+import { validateSchoolYear } from "../../../../utils/validation";
+import SchoolYearForm from "./SchoolYearForm";
 
-export default function SubjectCreate() {
+export default function SchoolYearCreate() {
   return (
     <>
       <DashboardLayout
-        title="Tambah Mata Pelajaran"
+        title="Tambah Tahun Ajaran"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -27,8 +27,8 @@ export default function SubjectCreate() {
             link: '#'
           },
           {
-            label: 'Mata Pelajaran',
-            link: '/dashboard/master/subjects'
+            label: 'Tahun Ajaran',
+            link: '/dashboard/master/schoolyears'
           },
           {
             label: 'Tambah Data',
@@ -38,15 +38,17 @@ export default function SubjectCreate() {
       >
         <Card>
           <CardHeader>
-            <Heading as='h4' size='md'>Form Tambah Mata Pelajaran</Heading>
+            <Heading as='h4' size='md'>Form Tambah Tahun Ajaran</Heading>
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ name: '', teacher_uuid: '' }}
-              validate={validateSubject}
+              initialValues={{ start_year: '', end_year: '' }}
+              validate={validateSchoolYear}
               onSubmit={async (values, actions) => {
                 try {
-                  const { data: response } = await axios.post('/master/subjects', values);
+                  const { data: response } = await axios.post('/master/school_years', {
+                    name: `${values.start_year}/${values.end_year}`
+                  });
 
                   toast.success(response.message)
                   actions.resetForm()
@@ -61,7 +63,7 @@ export default function SubjectCreate() {
             >
               {(props) => (
                 <Form>
-                  <SubjectForm />
+                  <SchoolYearForm />
                   <Button
                     mt={4}
                     colorScheme='teal'

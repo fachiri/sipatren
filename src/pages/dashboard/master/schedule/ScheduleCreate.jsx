@@ -9,14 +9,14 @@ import {
   Heading,
 } from '@chakra-ui/react'
 import { toast } from "react-toastify";
-import { validateSubject } from "../../../../utils/validation";
-import SubjectForm from "./SubjectForm";
+import { validateSchedule } from "../../../../utils/validation";
+import ScheduleForm from "./ScheduleForm";
 
-export default function SubjectCreate() {
+export default function SchduleCreate() {
   return (
     <>
       <DashboardLayout
-        title="Tambah Mata Pelajaran"
+        title="Tambah Jadwal"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -27,8 +27,8 @@ export default function SubjectCreate() {
             link: '#'
           },
           {
-            label: 'Mata Pelajaran',
-            link: '/dashboard/master/subjects'
+            label: 'Jadwal',
+            link: '/dashboard/master/schedules'
           },
           {
             label: 'Tambah Data',
@@ -38,15 +38,15 @@ export default function SubjectCreate() {
       >
         <Card>
           <CardHeader>
-            <Heading as='h4' size='md'>Form Tambah Mata Pelajaran</Heading>
+            <Heading as='h4' size='md'>Form Tambah Jadwal</Heading>
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ name: '', teacher_uuid: '' }}
-              validate={validateSubject}
+              initialValues={{ day: '', start: '', end: '', class_uuid: '', subject_uuid: '', school_year_uuid: '' }}
+              validate={validateSchedule}
               onSubmit={async (values, actions) => {
                 try {
-                  const { data: response } = await axios.post('/master/subjects', values);
+                  const { data: response } = await axios.post('/master/schedules', values);
 
                   toast.success(response.message)
                   actions.resetForm()
@@ -61,7 +61,7 @@ export default function SubjectCreate() {
             >
               {(props) => (
                 <Form>
-                  <SubjectForm />
+                  <ScheduleForm />
                   <Button
                     mt={4}
                     colorScheme='teal'

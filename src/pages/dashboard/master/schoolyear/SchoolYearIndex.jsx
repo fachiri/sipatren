@@ -18,13 +18,13 @@ import { Link } from "react-router-dom";
 import fetcher from "../../../../utils/fetcher"
 import useSWR from 'swr'
 
-export default function SubjectIndex() {
-  const { data: subjectData, error: subjectError, isLoading: subjectIsLoading } = useSWR(`/master/subjects`, fetcher)
+export default function SchoolYear() {
+  const { data: schoolYearData, error: schoolYearError, isLoading: schoolYearIsLoading } = useSWR(`/master/school_years`, fetcher)
 
   return (
     <>
       <DashboardLayout
-        title="Master Mata Pelajaran"
+        title="Master Tahun Ajaran"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -35,7 +35,7 @@ export default function SubjectIndex() {
             link: '#'
           },
           {
-            label: 'Mata Pelajaran',
+            label: 'Tahun Ajaran',
             link: '#'
           },
         ]}
@@ -50,23 +50,21 @@ export default function SubjectIndex() {
       >
         <Card>
           <CardHeader>
-            <Heading size='md'>Daftar Mata Pelajaran</Heading>
+            <Heading size='md'>Daftar Tahun Ajaran</Heading>
           </CardHeader>
           <CardBody>
             <TableContainer>
               <Table variant='striped' colorScheme='gray'>
                 <Thead>
                   <Tr>
-                    <Th>Mata Pelajaran</Th>
-                    <Th>Pengajar</Th>
+                    <Th>Tahun Ajaran</Th>
                     <Th>Aksi</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {subjectData?.data?.rows.map((item, idx) => (
+                  {schoolYearData?.data?.rows.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.name}</Td>
-                      <Td>{item.teacher?.user?.nama}</Td>
                       <Td>
                         <Link to={"detail/" + item.uuid}>
                           <Button leftIcon={<FaList />} colorScheme='teal' variant='solid' size='sm'>Detail</Button>

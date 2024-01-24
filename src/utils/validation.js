@@ -110,7 +110,63 @@ export function validateSubject(values) {
   const errors = {};
 
   if (!values.name) {
-    errors.name = 'Nama Mata Pelajaran';
+    errors.name = 'Nama Mata Pelajaran harus diisi';
+  }
+
+  if (!values.teacher_uuid) {
+    errors.teacher_uuid = 'Guru Mata Pelajaran harus diisi';
+  }
+
+  return errors;
+}
+
+export function validateSchoolYear(values) {
+  const errors = {};
+
+  if (!values.start_year) {
+    errors.start_year = 'Tahun Mulai harus diisi';
+  } else if (!/^\d+$/.test(values.start_year)) {
+    errors.start_year = 'Tahun Mulai harus berupa angka';
+  }
+
+  if (!values.end_year) {
+    errors.end_year = 'Tahun Selesai harus diisi';
+  } else if (!/^\d+$/.test(values.end_year)) {
+    errors.end_year = 'Tahun Selesai harus berupa angka';
+  }
+
+  if (values.start_year === values.end_year) {
+    errors.end_year = 'Tahun Selesai harus berbeda dengan Tahun Mulai';
+  }
+
+  return errors;
+}
+
+export function validateSchedule(values) {
+  const errors = {};
+
+  if (!values.day) {
+    errors.day = 'Pilih Hari';
+  }
+
+  if (!values.start) {
+    errors.start = 'Pilih Jam Mulai';
+  }
+
+  if (!values.end) {
+    errors.end = 'Pilih Jam Selesai';
+  }
+
+  if (!values.class_uuid) {
+    errors.class_uuid = 'Pilih Kelas';
+  }
+
+  if (!values.subject_uuid) {
+    errors.subject_uuid = 'Pilih Mata Pelajaran';
+  }
+
+  if (!values.school_year_uuid) {
+    errors.school_year_uuid = 'Pilih Tahun Ajaran';
   }
 
   return errors;

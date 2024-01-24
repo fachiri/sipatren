@@ -26,12 +26,12 @@ export default function SubjectForm() {
         name="name"
         placeholder="Mata Pelajaran"
       />
-      {/* <FormSelect
+      <FormSelect
         label="Pengajar"
         name="teacher_uuid"
         placeholder="Pilih Pengajar"
         options={getTeacherOptions()}
-      /> */}
+      />
     </>
   )
 }

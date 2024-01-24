@@ -27,22 +27,33 @@ import {
   BreadcrumbLink,
   Button,
 } from '@chakra-ui/react';
-import { FaCalendarCheck, FaChartPie, FaDatabase, FaFile, FaHome } from 'react-icons/fa';
+import { FaCalendarCheck, FaChartPie, FaDatabase, FaFile, FaHistory, FaHome } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png'
 import { Fragment } from 'react';
+import fetcher from "../utils/fetcher"
+import useSWR, { mutate } from 'swr'
+import { serverUrl } from '../utils/constants';
 
 export default function DashboardLayout({ children, breadcrumbs, title, actions }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { data: userData, error: userError, isLoading: userIsLoading } = useSWR(`/auth/verify-token`, fetcher)
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+
+    navigate('/login')
+  }
 
   return (
     <Box as="section" bg={useColorModeValue('gray.50', 'gray.700')} minH="100vh">
-      <SidebarContent display={{ base: 'none', md: 'unset' }} />
+      <SidebarContent userdata={userData} display={{ base: 'none', md: 'unset' }} />
       <Drawer isOpen={isOpen} onClose={onClose} placement="left">
         <DrawerOverlay />
         <DrawerContent>
-          <SidebarContent w="full" borderRight="none" />
+          <SidebarContent userdata={userData} w="full" borderRight="none" />
         </DrawerContent>
       </Drawer>
       <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
@@ -67,23 +78,26 @@ export default function DashboardLayout({ children, breadcrumbs, title, actions 
           />
 
           <Flex align="center">
-            {/* <Flex borderRadius="50%" border="2px" borderColor="gray.500" w={8} h={8} alignItems="center" justifyContent="center">
-              <Icon color="gray.500" as={FaBell} cursor="pointer" />
-            </Flex> */}
+            <Flex flexDirection="column" alignItems="end">
+              <Text as="small" fontWeight="bold" mb={-1}>{userData?.data?.nama}</Text>
+              <Text as="small">@{userData?.data?.username}</Text>
+            </Flex>
             <Menu>
               <MenuButton ml="4">
                 <Avatar
                   size="sm"
-                  name="Ahmad"
-                  src="https://avatars2.githubusercontent.com/u/37842853?v=4"
+                  name={userData?.data?.nama}
+                  src={serverUrl + userData?.data?.avatar}
                   cursor="pointer"
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Profil</MenuItem>
+                <MenuItem onClick={() => navigate('/dashboard/profile')}>Profil</MenuItem>
                 <MenuItem>Keamanan</MenuItem>
                 <MenuDivider />
-                <MenuItem>Keluar</MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  Keluar
+                </MenuItem>
               </MenuList>
             </Menu>
 
@@ -110,7 +124,7 @@ export default function DashboardLayout({ children, breadcrumbs, title, actions 
                   <Fragment key={idx}>
                     {item.link && (
                       <Link to={item.link}>
-                        <Button leftIcon={item.icon} colorScheme={item.color} variant='solid' size={{ base: "sm", md: "md"}}>
+                        <Button leftIcon={item.icon} colorScheme={item.color} variant='solid' size={{ base: "sm", md: "md" }}>
                           {item.label}
                         </Button>
                       </Link>
@@ -164,50 +178,69 @@ const SidebarContent = ({ ...props }) => (
       <Link to="/dashboard">
         <NavItem icon={FaHome} label="Dashboard" />
       </Link>
-      <NavSubItem
-        label="Master"
-        icon={FaDatabase}
-        items={[
-          {
-            link: '/dashboard/master/santri',
-            label: 'Santri'
-          },
-          {
-            link: '/dashboard/master/teachers',
-            label: 'Guru'
-          },
-          {
-            link: '/dashboard/master/classes',
-            label: 'Kelas'
-          },
-          {
-            link: '/dashboard/master/subjects',
-            label: 'Mata Pelajaran'
-          },
-          {
-            link: '/dashboard/master/schedules',
-            label: 'Jadwal'
-          },
-        ]}
-      />
-      <NavItem icon={FaFile} label="Administrasi" />
-      <Link to="/dashboard/presence">
-        <NavItem icon={FaCalendarCheck} label="Absensi" />
-      </Link>
-      <NavSubItem
-        label="Laporan"
-        icon={FaChartPie}
-        items={[
-          {
-            link: '/dashboard/reports/presence',
-            label: 'Presensi'
-          },
-          {
-            link: '/dashboard/reports/spp',
-            label: 'SPP'
-          },
-        ]}
-      />
+      {['ADMIN'].includes(props.userdata?.data?.role) &&
+        <NavSubItem
+          label="Master"
+          icon={FaDatabase}
+          items={[
+            {
+              link: '/dashboard/master/santri',
+              label: 'Santri'
+            },
+            {
+              link: '/dashboard/master/teachers',
+              label: 'Guru'
+            },
+            {
+              link: '/dashboard/master/classes',
+              label: 'Kelas'
+            },
+            {
+              link: '/dashboard/master/subjects',
+              label: 'Mata Pelajaran'
+            },
+            {
+              link: '/dashboard/master/schoolyears',
+              label: 'Tahun Ajaran'
+            },
+            {
+              link: '/dashboard/master/schedules',
+              label: 'Jadwal'
+            },
+          ]}
+        />
+      }
+      {['GURU'].includes(props.userdata?.data?.role) &&
+        <Link to="/dashboard/administrasi">
+          <NavItem icon={FaFile} label="Administrasi" />
+        </Link>
+      }
+      {['SANTRI'].includes(props.userdata?.data?.role) &&
+        <>
+          <Link to="/dashboard/presence">
+            <NavItem icon={FaCalendarCheck} label="Presensi" />
+          </Link>
+          <Link to="/dashboard/histories">
+            <NavItem icon={FaHistory} label="Riwayat" />
+          </Link>
+        </>
+      }
+      {['ADMIN'].includes(props.userdata?.data?.role) &&
+        <NavSubItem
+          label="Laporan"
+          icon={FaChartPie}
+          items={[
+            {
+              link: '/dashboard/reports/presence',
+              label: 'Presensi'
+            },
+            {
+              link: '/dashboard/reports/spp',
+              label: 'SPP'
+            },
+          ]}
+        />
+      }
     </Flex>
   </Box>
 );

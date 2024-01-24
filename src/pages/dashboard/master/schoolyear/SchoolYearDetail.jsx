@@ -18,20 +18,20 @@ import { toast } from "react-toastify";
 import FormDelete from "../../../../components/form/FormDelete";
 import axios from "../../../../utils/axios"
 import FormEdit from "../../../../components/form/FormEdit";
-import { validateClass } from "../../../../utils/validation";
-import ClassForm from "./ClassForm";
+import { validateSchoolYear } from "../../../../utils/validation";
+import SchoolYearForm from "./SchoolYearForm";
 
-export default function ClassDetail() {
+export default function SchoolYearDetail() {
   const modalDelete = useDisclosure()
   const modalEdit = useDisclosure()
   const { uuid } = useParams()
   const navigate = useNavigate()
-  const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes/${uuid}`, fetcher)
+  const { data: schoolYearData, error: schoolYearError, isLoading: schoolYearIsLoading } = useSWR(`/master/school_years/${uuid}`, fetcher)
 
   return (
     <>
       <DashboardLayout
-        title="Detail Kelas"
+        title="Detail Tahun Ajaran"
         breadcrumbs={[
           {
             label: 'Dashboard',
@@ -42,33 +42,35 @@ export default function ClassDetail() {
             link: '#'
           },
           {
-            label: 'Kelas',
-            link: '/dashboard/master/classes'
+            label: 'Tahun Ajaran',
+            link: '/dashboard/master/schoolyears'
           },
           {
-            label: classData?.data?.name,
+            label: schoolYearData?.data?.name,
             link: '#'
           },
         ]}
       >
         <Card>
           <CardHeader display="flex" justifyContent="space-between">
-            <Heading size='md'>Detail {classData?.data?.name}</Heading>
+            <Heading size='md'>Detail Tahun Ajaran {schoolYearData?.data?.name}</Heading>
             <Flex gap={2}>
               <FormEdit
                 modal={modalEdit}
                 initialValues={{
-                  name: classData?.data?.name,
-                  teacher_uuid: classData?.data?.teacher?.uuid,
+                  start_year: schoolYearData?.data?.name.split("/")[0],
+                  end_year: schoolYearData?.data?.name.split("/")[1],
                 }}
-                validate={validateClass}
+                validate={validateSchoolYear}
                 onSubmit={async (values, actions) => {
                   try {
-                    const { data: response } = await axios.put(`/master/classes/${uuid}`, values);
+                    const { data: response } = await axios.put(`/master/school_years/${uuid}`, {
+                      name: `${values.start_year}/${values.end_year}`
+                    });
 
                     toast.success(response.message)
                     modalEdit.onClose(true)
-                    mutate(`/master/classes/${uuid}`)
+                    mutate(`/master/school_years/${uuid}`)
                   } catch (error) {
                     if (error.name != 'AxiosError') {
                       toast.error(error.message)
@@ -78,17 +80,17 @@ export default function ClassDetail() {
                   }
                 }}
               >
-                <ClassForm />
+                <SchoolYearForm />
               </FormEdit>
               <FormDelete
                 modal={modalDelete}
-                data={classData?.data?.name}
+                data={schoolYearData?.data?.name}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/classes/${uuid}`)
+                    const response = await axios.delete(`/master/school_years/${uuid}`)
 
                     toast.success(response.message)
-                    navigate('/dashboard/master/classes')
+                    navigate('/dashboard/master/schoolyears')
                   } catch (error) {
                     if (error.name != 'AxiosError') {
                       toast.error(error.message)
@@ -101,14 +103,7 @@ export default function ClassDetail() {
           <CardBody>
             <ListDetail
               items={[
-                { label: 'Nama Kelas', value: classData?.data?.name },
-                { 
-                  label: 'Wali Kelas', 
-                  value: 
-                    <Link to={`/dashboard/master/teachers/detail/${classData?.data?.teacher?.uuid}`} style={{ color: 'teal' }}>
-                      {classData?.data?.teacher?.user?.nama}
-                    </Link> 
-                },
+                { label: 'Tahun Ajaran', value: schoolYearData?.data?.name },
               ]}
             />
           </CardBody>
