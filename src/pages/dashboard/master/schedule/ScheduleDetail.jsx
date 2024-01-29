@@ -89,7 +89,7 @@ export default function ScheduleDetail() {
                 data={scheduleData?.data?.name}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/schedules/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/schedules/${uuid}`)
 
                     toast.success(response.message)
                     navigate('/dashboard/master/schedules')

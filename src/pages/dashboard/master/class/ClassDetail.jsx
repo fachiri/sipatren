@@ -85,7 +85,7 @@ export default function ClassDetail() {
                 data={classData?.data?.name}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/classes/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/classes/${uuid}`)
 
                     toast.success(response.message)
                     navigate('/dashboard/master/classes')

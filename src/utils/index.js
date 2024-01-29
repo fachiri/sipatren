@@ -14,3 +14,14 @@ export const formatDate = (date) => {
   }
   return new Date(date).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
+
+export const format3Digit = (number) => {
+  try {
+    return number.toLocaleString('en-US', {
+      minimumIntegerDigits: 3,
+      useGrouping: true
+    })
+  } catch (error) {
+    return '000'
+  }
+}

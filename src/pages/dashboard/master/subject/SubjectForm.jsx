@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import FormInput from "../../../../components/form/FormInput";
-import FormSelect from "../../../../components/form/FormSelect";
 import fetcher from "../../../../utils/fetcher";
+import FormMultiSelect from "../../../../components/form/FormMultiSelect";
 
 export default function SubjectForm() {
   const { data: teacherData, error: teacherError, isLoading: teacherIsLoading } = useSWR(`/master/teachers`, fetcher)
@@ -26,7 +26,7 @@ export default function SubjectForm() {
         name="name"
         placeholder="Mata Pelajaran"
       />
-      <FormSelect
+      <FormMultiSelect
         label="Pengajar"
         name="teacher_uuid"
         placeholder="Pilih Pengajar"

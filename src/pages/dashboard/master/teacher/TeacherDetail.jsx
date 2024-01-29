@@ -93,10 +93,10 @@ export default function TeacherDetail() {
                 data={teacherData?.data?.user?.nama}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/teachers/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/teachers/${uuid}`)
 
                     toast.success(response.message)
-                    navigate('/dashboard/master/santri')
+                    navigate('/dashboard/master/teachers')
                   } catch (error) {
                     if (error.name != 'AxiosError') {
                       toast.error(error.message)

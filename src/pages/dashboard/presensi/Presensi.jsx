@@ -1,9 +1,11 @@
 import { Box, Button, Card, CardBody, CardHeader, Flex, Heading, Text } from "@chakra-ui/react";
 import DashboardLayout from "../../../layouts/DashboardLayout";
 import { Link } from "react-router-dom";
-import { FaFingerprint } from "react-icons/fa";
 import fetcher from "../../../utils/fetcher";
 import useSWR from "swr";
+import { FaList } from "react-icons/fa";
+import { days } from "../../../utils/constants";
+import { Fragment } from "react";
 
 export default function Presensi() {
   const { data: scheduleData, error: scheduleError, isLoading: scheduleIsLoading } = useSWR(`/schedules`, fetcher)
@@ -28,31 +30,40 @@ export default function Presensi() {
             <Heading size='md'>Jadwal Saya</Heading>
           </CardHeader>
           <CardBody>
-            {scheduleData?.data && Object.keys(scheduleData.data).map((day) => (
-              <Box key={day} mb={10}>
-                <Heading size='sm' mb={5}>
-                  {day}
-                </Heading>
-                {scheduleData?.data[day]?.map((item, idx) => (
-                  <Flex key={idx} justifyContent="space-between" mb={5}>
-                    <Flex>
-                      <Text as="b">{item.subject?.name}</Text>
-                      <Text ml={2}>{item.start} - {item.end}</Text>
-                    </Flex>
-                    <Link to={`mark/${item.uuid}`}>
-                      <Button
-                        leftIcon={<FaFingerprint />}
-                        colorScheme='teal'
-                        variant='solid'
-                        size='sm'
-                      >
-                        Tandai Kehadiran
-                      </Button>
-                    </Link>
-                  </Flex>
-                ))}
-              </Box>
+            {days.map((day) => (
+              <Fragment key={day}>
+                {scheduleData?.data[day] ? (
+                  <Box mb={10}>
+                    <Heading size='sm' mb={5}>
+                      {day}
+                    </Heading>
+                    {scheduleData.data[day].map((item, idx) => (
+                      <Flex key={idx} justifyContent="space-between" mb={5}>
+                        <Flex flexWrap="wrap" gap={2}>
+                          <Text as="b">{item.start} - {item.end}</Text>
+                          <Text>|</Text>
+                          <Text>{item.class?.name}</Text>
+                          <Text>|</Text>
+                          <Text>{item.subject?.name}</Text>
+                        </Flex>
+                        <Link to={`detail/${item.uuid}`}>
+                          <Button
+                            leftIcon={<FaList />}
+                            width={75}
+                            colorScheme='teal'
+                            variant='solid'
+                            size='sm'
+                          >
+                            Detail
+                          </Button>
+                        </Link>
+                      </Flex>
+                    ))}
+                  </Box>
+                ) : null}
+              </Fragment>
             ))}
+
           </CardBody>
         </Card>
       </DashboardLayout>

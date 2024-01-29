@@ -87,7 +87,7 @@ export default function SchoolYearDetail() {
                 data={schoolYearData?.data?.name}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/school_years/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/school_years/${uuid}`)
 
                     toast.success(response.message)
                     navigate('/dashboard/master/schoolyears')

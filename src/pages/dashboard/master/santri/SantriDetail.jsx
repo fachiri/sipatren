@@ -5,6 +5,7 @@ import {
   CardHeader,
   Flex,
   Heading,
+  Image,
   useDisclosure,
 } from '@chakra-ui/react'
 import { useNavigate } from "react-router-dom";
@@ -19,14 +20,21 @@ import FormEdit from "../../../../components/form/FormEdit";
 import FormInput from "../../../../components/form/FormInput";
 import FormSelect from "../../../../components/form/FormSelect";
 import { validateSantri } from "../../../../utils/validation";
+import FormCapture from "../../../../components/form/FormCapture";
+import { serverUrl } from "../../../../utils/constants";
+import { useCallback, useRef, useState } from "react";
+import { dataURItoBlob } from "../../../../utils";
 
 export default function SantriDetail() {
   const modalDelete = useDisclosure()
   const modalEdit = useDisclosure()
+  const modalCapture = useDisclosure()
   const { uuid } = useParams()
   const navigate = useNavigate()
   const { data: studentData, error: studentError, isLoading: studentIsLoading } = useSWR(`/master/students/${uuid}`, fetcher)
   const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes`, fetcher)
+  const webcamRef = useRef(null);
+  const { isCapturing, setIsCapturing } = useState(false)
 
   const getClassOptions = () => {
     let classes = [];
@@ -59,38 +67,24 @@ export default function SantriDetail() {
             link: '/dashboard/master/santri'
           },
           {
-            label: '@' + studentData?.data?.user?.username,
+            label: studentData?.data?.nis,
             link: '#'
           },
         ]}
-        actions={[
-          // {
-          //   label: 'Hapus',
-          //   icon: <FaTrash />,
-          //   color: 'red',
-          //   onClick: async () => {
-          //     try {
-          //       const response = await axios.delete(`/master/students/${uuid}`)
-
-          //       toast.success(response.message)
-          //     } catch (error) {
-          //       if (error.name != 'AxiosError') {
-          //         toast.error(error.message)
-          //       }
-          //     }
-          //   }
-          // }
-        ]}
       >
-        <Card>
+        <Card mb={5}>
           <CardHeader display="flex" justifyContent="space-between">
-            <Heading size='md'>Detail {studentData?.data?.user?.nama.split(' ')[0]}</Heading>
+            <Heading size='md'>Detail {studentData?.data?.nama.split(' ')[0]}</Heading>
             <Flex gap={2}>
+              <FormCapture
+                modal={modalCapture}
+                uuid={uuid}
+              />
               <FormEdit
                 modal={modalEdit}
                 initialValues={{
-                  nama: studentData?.data?.user?.nama,
-                  username: studentData?.data?.user?.username,
+                  tanggal_masuk: studentData?.data?.tanggal_masuk,
+                  nama: studentData?.data?.nama,
                   nis: studentData?.data?.nis,
                   jk: studentData?.data?.jk,
                   tempat_lahir: studentData?.data?.tempat_lahir,
@@ -115,6 +109,12 @@ export default function SantriDetail() {
                   }
                 }}
               >
+                <FormInput
+                  label="Tanggal Masuk"
+                  name="tanggal_masuk"
+                  placeholder="Tanggal Masuk"
+                  type="date"
+                />
                 <FormInput
                   label="Nama Lengkap"
                   name="nama"
@@ -160,10 +160,10 @@ export default function SantriDetail() {
               </FormEdit>
               <FormDelete
                 modal={modalDelete}
-                data={studentData?.data?.user?.nama}
+                data={studentData?.data?.nama}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/students/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/students/${uuid}`)
 
                     toast.success(response.message)
                     navigate('/dashboard/master/santri')
@@ -179,7 +179,8 @@ export default function SantriDetail() {
           <CardBody>
             <ListDetail
               items={[
-                { label: 'Nama', value: studentData?.data?.user?.nama },
+                { label: 'Tanggal Masuk', value: studentData?.data?.tanggal_masuk },
+                { label: 'Nama', value: studentData?.data?.nama },
                 { label: 'NIS', value: studentData?.data?.nis },
                 { label: 'Jenis Kelamin', value: studentData?.data?.jk },
                 { label: 'Tempat Lahir', value: studentData?.data?.tempat_lahir },
@@ -187,6 +188,20 @@ export default function SantriDetail() {
                 { label: 'Alamat', value: studentData?.data?.alamat },
                 { label: 'Kelas', value: studentData?.data?.class?.name },
               ]}
+            />
+          </CardBody>
+        </Card>
+        <Card mb={5}>
+          <CardHeader display="flex" justifyContent="space-between" pb={0}>
+            <Heading size='md'>Foto Siswa</Heading>
+          </CardHeader>
+          <CardBody>
+            <Image
+              boxSize='150px'
+              objectFit='cover'
+              borderRadius={3}
+              src={`${serverUrl}/public/avatar/${studentData?.data?.image}`}
+              alt={studentData?.data?.nama}
             />
           </CardBody>
         </Card>

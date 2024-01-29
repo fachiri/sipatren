@@ -42,11 +42,14 @@ export default function SubjectCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ name: '', teacher_uuid: '' }}
+              initialValues={{ name: '', teacher_uuid: [] }}
               validate={validateSubject}
               onSubmit={async (values, actions) => {
                 try {
-                  const { data: response } = await axios.post('/master/subjects', values);
+                  const { data: response } = await axios.post('/master/subjects', {
+                    name: values.name,
+                    teachers_uuid: values.teacher_uuid.map((e) => e.value)
+                  });
 
                   toast.success(response.message)
                   actions.resetForm()

@@ -60,7 +60,7 @@ export default function SantriCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ nama: '', nis: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', class_uuid: '' }}
+              initialValues={{ nama: '', nis: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', class_uuid: '', tanggal_masuk: '' }}
               validate={validateSantri}
               onSubmit={async (values, actions) => {
                 try {
@@ -80,6 +80,12 @@ export default function SantriCreate() {
             >
               {(props) => (
                 <Form>
+                  <FormInput
+                    label="Tanggal Masuk"
+                    name="tanggal_masuk"
+                    placeholder="Tanggal Masuk"
+                    type="date"
+                  />
                   <FormInput
                     label="Nama Lengkap"
                     name="nama"

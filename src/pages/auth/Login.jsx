@@ -15,12 +15,13 @@ import {
   Select,
   FormErrorMessage
 } from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock, FaAt } from "react-icons/fa";
 import { Field, Form, Formik } from "formik";
 import axios from "../../utils/axios"
 import { useNavigate } from "react-router-dom";
 
 const CFaUserAlt = chakra(FaUserAlt);
+const CFaAt = chakra(FaAt);
 const CFaLock = chakra(FaLock);
 
 export default function Login() {
@@ -87,7 +88,6 @@ export default function Login() {
                             <option value="" hidden>Masuk Sebagai</option>
                             <option value="ADMIN">ADMIN</option>
                             <option value="GURU">GURU</option>
-                            <option value="SANTRI">SANTRI</option>
                           </Select>
                         </InputGroup>
                         <FormErrorMessage>{form.errors.role}</FormErrorMessage>
@@ -100,7 +100,7 @@ export default function Login() {
                         <InputGroup>
                           <InputLeftElement
                             pointerEvents="none"
-                            children={<CFaUserAlt color="gray.300" />}
+                            children={<CFaAt color="gray.300" />}
                           />
                           <Input {...field} type="text" placeholder="Username" autoComplete="username" />
                         </InputGroup>

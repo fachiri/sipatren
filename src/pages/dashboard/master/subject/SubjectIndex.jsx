@@ -13,6 +13,7 @@ import {
   CardBody,
   CardHeader,
   Heading,
+  Text,
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import fetcher from "../../../../utils/fetcher"
@@ -66,7 +67,11 @@ export default function SubjectIndex() {
                   {subjectData?.data?.rows.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.name}</Td>
-                      <Td>{item.teacher?.user?.nama}</Td>
+                      <Td>
+                        {item.teachers?.map((subItem, idx2) => (
+                          <Text key={idx2}>{subItem.user.nama}</Text>
+                        ))}
+                      </Td>
                       <Td>
                         <Link to={"detail/" + item.uuid}>
                           <Button leftIcon={<FaList />} colorScheme='teal' variant='solid' size='sm'>Detail</Button>

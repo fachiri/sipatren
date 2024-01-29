@@ -27,7 +27,7 @@ import {
   BreadcrumbLink,
   Button,
 } from '@chakra-ui/react';
-import { FaCalendarCheck, FaChartPie, FaDatabase, FaFile, FaHistory, FaHome } from 'react-icons/fa';
+import { FaChartPie, FaDatabase, FaHome } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png'
@@ -35,6 +35,7 @@ import { Fragment } from 'react';
 import fetcher from "../utils/fetcher"
 import useSWR, { mutate } from 'swr'
 import { serverUrl } from '../utils/constants';
+import { MenuLists } from './../components/MenuLists';
 
 export default function DashboardLayout({ children, breadcrumbs, title, actions }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -112,7 +113,7 @@ export default function DashboardLayout({ children, breadcrumbs, title, actions 
               </Heading>
               <Breadcrumb spacing='8px'>
                 {breadcrumbs.map((item, idx) => (
-                  <BreadcrumbItem key={idx} isCurrentPage={breadcrumbs.length - 1 === idx}>
+                  <BreadcrumbItem key={idx} isCurrentPage={breadcrumbs.length - 1 === idx} color={idx < breadcrumbs.length - 1 ? "teal" : ""}>
                     <BreadcrumbLink as={Link} to={item.link}>{item.label}</BreadcrumbLink>
                   </BreadcrumbItem>
                 ))}
@@ -179,67 +180,61 @@ const SidebarContent = ({ ...props }) => (
         <NavItem icon={FaHome} label="Dashboard" />
       </Link>
       {['ADMIN'].includes(props.userdata?.data?.role) &&
-        <NavSubItem
-          label="Master"
-          icon={FaDatabase}
-          items={[
-            {
-              link: '/dashboard/master/santri',
-              label: 'Santri'
-            },
-            {
-              link: '/dashboard/master/teachers',
-              label: 'Guru'
-            },
-            {
-              link: '/dashboard/master/classes',
-              label: 'Kelas'
-            },
-            {
-              link: '/dashboard/master/subjects',
-              label: 'Mata Pelajaran'
-            },
-            {
-              link: '/dashboard/master/schoolyears',
-              label: 'Tahun Ajaran'
-            },
-            {
-              link: '/dashboard/master/schedules',
-              label: 'Jadwal'
-            },
-          ]}
-        />
-      }
-      {['GURU'].includes(props.userdata?.data?.role) &&
-        <Link to="/dashboard/administrasi">
-          <NavItem icon={FaFile} label="Administrasi" />
-        </Link>
-      }
-      {['SANTRI'].includes(props.userdata?.data?.role) &&
         <>
-          <Link to="/dashboard/presence">
-            <NavItem icon={FaCalendarCheck} label="Presensi" />
-          </Link>
-          <Link to="/dashboard/histories">
-            <NavItem icon={FaHistory} label="Riwayat" />
-          </Link>
+          <NavSubItem
+            label="Master"
+            icon={FaDatabase}
+            items={[
+              {
+                link: '/dashboard/master/santri',
+                label: 'Santri'
+              },
+              {
+                link: '/dashboard/master/teachers',
+                label: 'Guru'
+              },
+              {
+                link: '/dashboard/master/classes',
+                label: 'Kelas'
+              },
+              {
+                link: '/dashboard/master/subjects',
+                label: 'Mata Pelajaran'
+              },
+              {
+                link: '/dashboard/master/schoolyears',
+                label: 'Tahun Ajaran'
+              },
+              {
+                link: '/dashboard/master/schedules',
+                label: 'Jadwal'
+              },
+            ]}
+          />
+          <NavSubItem
+            label="Laporan"
+            icon={FaChartPie}
+            items={[
+              {
+                link: '/dashboard/reports/presence',
+                label: 'Presensi'
+              },
+              {
+                link: '/dashboard/reports/spp',
+                label: 'SPP'
+              },
+            ]}
+          />
         </>
       }
-      {['ADMIN'].includes(props.userdata?.data?.role) &&
-        <NavSubItem
-          label="Laporan"
-          icon={FaChartPie}
-          items={[
-            {
-              link: '/dashboard/reports/presence',
-              label: 'Presensi'
-            },
-            {
-              link: '/dashboard/reports/spp',
-              label: 'SPP'
-            },
-          ]}
-        />
+      {['GURU'].includes(props.userdata?.data?.role) &&
+        <>
+          {MenuLists.GURU.map((item, index) => (
+            <Link key={index} to={item.link}>
+              <NavItem icon={item.icon} label={item.label} />
+            </Link>
+          ))}
+        </>
       }
     </Flex>
   </Box>

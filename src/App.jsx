@@ -23,10 +23,13 @@ import SchoolYearDetail from "./pages/dashboard/master/schoolyear/SchoolYearDeta
 import ScheduleIndex from "./pages/dashboard/master/schedule/ScheduleIndex"
 import SchduleCreate from "./pages/dashboard/master/schedule/ScheduleCreate"
 import ScheduleDetail from "./pages/dashboard/master/schedule/ScheduleDetail"
-import TandaiKehadiran from "./pages/dashboard/presensi/TandaiKehadiran"
+import PresensiDetail from "./pages/dashboard/presensi/PresensiDetail"
 import Histories from "./pages/dashboard/presensi/Histories"
 import History from "./pages/dashboard/presensi/History"
 import NotFound from "./pages/errors/NotFound"
+import Classes from "./pages/dashboard/presensi/Classes"
+import Class from "./pages/dashboard/presensi/Class"
+import Student from "./pages/dashboard/student/Student"
 
 export default function App() {
   return (
@@ -38,10 +41,13 @@ export default function App() {
         </Route>
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/classes" element={<Classes />} />
+          <Route path="/dashboard/classes/detail/:uuid" element={<Class />} />
           <Route path="/dashboard/presence" element={<Presensi />} />
-          <Route path="/dashboard/presence/mark/:uuid" element={<TandaiKehadiran />} />
+          <Route path="/dashboard/presence/detail/:uuid" element={<PresensiDetail />} />
           <Route path="/dashboard/histories" element={<Histories />} />
           <Route path="/dashboard/histories/detail/:uuid" element={<History />} />
+          <Route path="/dashboard/students/detail/:uuid" element={<Student />} />
           <Route path="/dashboard/master">
             <Route path="santri" element={<SantriIndex />} />
             <Route path="santri/create" element={<SantriCreate />} />

@@ -2,6 +2,7 @@ import useSWR from "swr";
 import FormInput from "../../../../components/form/FormInput";
 import FormSelect from "../../../../components/form/FormSelect";
 import fetcher from "../../../../utils/fetcher";
+import { days } from "../../../../utils/constants";
 
 export default function ScheduleForm() {
   const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes`, fetcher)
@@ -27,14 +28,10 @@ export default function ScheduleForm() {
         label="Hari"
         name="day"
         placeholder="Pilih Hari"
-        options={[
-          { value: 'SENIN', label: 'SENIN' },
-          { value: 'SELASA', label: 'SELASA' },
-          { value: 'RABU', label: 'RABU' },
-          { value: 'KAMIS', label: 'KAMIS' },
-          { value: 'JUMAT', label: 'JUMAT' },
-          { value: 'SABTU', label: 'SABTU' }
-        ]}
+        options={days.map(e => ({
+          value: e,
+          label: e
+        }))}
       />
       <FormInput
         label="Jam Mulai"

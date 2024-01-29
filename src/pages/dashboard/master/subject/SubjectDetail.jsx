@@ -59,12 +59,18 @@ export default function SubjectDetail() {
                 modal={modalEdit}
                 initialValues={{
                   name: subjectData?.data?.name,
-                  teacher_uuid: subjectData?.data?.teacher?.uuid,
+                  teacher_uuid: (subjectData?.data?.teachers ?? []).map((e) => ({
+                    label: e.user.nama,
+                    value: e.uuid
+                  }))
                 }}
                 validate={validateSubject}
                 onSubmit={async (values, actions) => {
                   try {
-                    const { data: response } = await axios.put(`/master/subjects/${uuid}`, values);
+                    const { data: response } = await axios.put(`/master/subjects/${uuid}`, {
+                      name: values.name,
+                      teachers_uuid: values.teacher_uuid.map((e) => e.value)
+                    });
 
                     toast.success(response.message)
                     modalEdit.onClose(true)
@@ -85,7 +91,7 @@ export default function SubjectDetail() {
                 data={subjectData?.data?.name}
                 onClick={async () => {
                   try {
-                    const response = await axios.delete(`/master/subjects/${uuid}`)
+                    const { data: response } = await axios.delete(`/master/subjects/${uuid}`)
 
                     toast.success(response.message)
                     navigate('/dashboard/master/subjects')
@@ -102,13 +108,17 @@ export default function SubjectDetail() {
             <ListDetail
               items={[
                 { label: 'Mata Pelajaran', value: subjectData?.data?.name },
-                { 
-                  label: 'Pengajar', 
-                  value: 
-                    <Link to={`/dashboard/master/teachers/detail/${subjectData?.data?.teacher?.uuid}`} style={{ color: 'teal' }}>
-                      {subjectData?.data?.teacher?.user?.nama}
-                    </Link> 
-                },
+                {
+                  label: 'Pengajar',
+                  value: subjectData?.data?.teachers?.map((item, idx) => (
+                    <span key={idx}>
+                      <Link to={`/dashboard/master/teachers/detail/${item.uuid}`} style={{ color: 'teal' }}>
+                        {item.user?.nama}
+                      </Link>
+                      {idx !== subjectData.data.teachers.length - 1 && ' | '}
+                    </span>
+                  )) ?? "-"
+                }
               ]}
             />
           </CardBody>

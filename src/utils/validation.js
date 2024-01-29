@@ -1,6 +1,10 @@
 export function validateSantri(values) {
   const errors = {};
 
+  if (!values.tanggal_masuk) {
+    errors.tanggal_masuk = 'Tanggal Masuk harus diisi';
+  }
+
   if (!values.nama) {
     errors.nama = 'Nama harus diisi';
   }
@@ -113,7 +117,7 @@ export function validateSubject(values) {
     errors.name = 'Nama Mata Pelajaran harus diisi';
   }
 
-  if (!values.teacher_uuid) {
+  if (values.teacher_uuid.length === 0) {
     errors.teacher_uuid = 'Guru Mata Pelajaran harus diisi';
   }
 
