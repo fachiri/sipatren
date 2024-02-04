@@ -1,14 +1,33 @@
 import { Box, Button, Card, CardBody, CardHeader, Flex, Heading, Text } from "@chakra-ui/react";
 import DashboardLayout from "../../../layouts/DashboardLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import fetcher from "../../../utils/fetcher";
 import useSWR from "swr";
 import { FaList } from "react-icons/fa";
 import { days } from "../../../utils/constants";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { MultiSelect } from "chakra-multiselect";
+import { formatDate, getWeek, getWeeks, transformDates } from "../../../utils";
 
 export default function Presensi() {
+  const today = new Date();
+  const navigate = useNavigate();
+
+  const thisWeek = getWeeks().find(week => {
+    return today >= week.start && today <= week.end;
+  });
+
+  const [selectedWeek, setSelectedWeek] = useState(thisWeek ? JSON.stringify(thisWeek) : {})
+  const [formatedDays, setFormatedDays] = useState(thisWeek ?? {})
+
   const { data: scheduleData, error: scheduleError, isLoading: scheduleIsLoading } = useSWR(`/schedules`, fetcher)
+
+  useEffect(() => {
+    if (selectedWeek && Object.keys(selectedWeek).length !== 0) {
+      const weeks = JSON.parse(selectedWeek)
+      setFormatedDays(transformDates(getWeek(weeks)))
+    }
+  }, [selectedWeek])
 
   return (
     <>
@@ -25,6 +44,28 @@ export default function Presensi() {
           },
         ]}
       >
+        <Card mb={5}>
+          <CardHeader pb={0}>
+            <Heading size='md'>Filter</Heading>
+          </CardHeader>
+          <CardBody>
+            <MultiSelect
+              value={selectedWeek}
+              placeholder="Pilih Minggu"
+              onChange={setSelectedWeek}
+              options={getWeeks().map(e => ({
+                value: JSON.stringify(e),
+                label: `${formatDate(e.start)} - ${formatDate(e.end)}`
+              }))}
+              filterFn={(options, searchText) =>
+                options.filter(option =>
+                  option.label.toLowerCase().includes(searchText.toLowerCase())
+                )
+              }
+              single
+            />
+          </CardBody>
+        </Card>
         <Card>
           <CardHeader>
             <Heading size='md'>Jadwal Saya</Heading>
@@ -46,17 +87,17 @@ export default function Presensi() {
                           <Text>|</Text>
                           <Text>{item.subject?.name}</Text>
                         </Flex>
-                        <Link to={`detail/${item.uuid}`}>
-                          <Button
-                            leftIcon={<FaList />}
-                            width={75}
-                            colorScheme='teal'
-                            variant='solid'
-                            size='sm'
-                          >
-                            Detail
-                          </Button>
-                        </Link>
+                        <Button
+                          leftIcon={<FaList />}
+                          width={75}
+                          colorScheme='teal'
+                          variant='solid'
+                          size='sm'
+                          isDisabled={Object.keys(selectedWeek).length == 0}
+                          onClick={() => navigate(`detail/${item.uuid}/${encodeURIComponent(formatedDays[day])}`)}
+                        >
+                          Detail
+                        </Button>
                       </Flex>
                     ))}
                   </Box>

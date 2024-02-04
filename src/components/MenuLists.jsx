@@ -23,28 +23,24 @@ export const MenuLists = {
           label: 'Mata Pelajaran'
         },
         {
-          link: '/dashboard/master/schoolyears',
-          label: 'Tahun Ajaran'
-        },
-        {
           link: '/dashboard/master/schedules',
           label: 'Jadwal'
+        },
+        {
+          link: '/dashboard/master/schoolyears',
+          label: 'Tahun Ajaran'
         },
       ]
     },
     {
+      link: '/dashboard/administration',
+      label: 'Administrasi',
+      icon: FaFile
+    },
+    {
+      link: '/dashboard/reports/spp',
       label: 'Laporan',
-      icon: FaChartPie,
-      subItems: [
-        {
-          link: '/dashboard/reports/presence',
-          label: 'Presensi'
-        },
-        {
-          link: '/dashboard/reports/spp',
-          label: 'SPP'
-        },
-      ]
+      icon: FaChartPie
     }
   ],
   GURU: [
@@ -54,19 +50,19 @@ export const MenuLists = {
       icon: FaUsers
     },
     {
-      link: '/dashboard/administration',
-      label: 'Administrasi',
-      icon: FaFile
-    },
-    {
       link: '/dashboard/presence',
       label: 'Presensi',
       icon: FaCalendarCheck
     },
+    // {
+    //   link: '/dashboard/histories',
+    //   label: 'Riwayat',
+    //   icon: FaHistory
+    // },
     {
-      link: '/dashboard/histories',
-      label: 'Riwayat',
-      icon: FaHistory
-    },
+      link: '/dashboard/reports/presence',
+      label: 'Laporan',
+      icon: FaChartPie
+    }
   ]
 }

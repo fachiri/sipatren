@@ -27,7 +27,7 @@ import {
   BreadcrumbLink,
   Button,
 } from '@chakra-ui/react';
-import { FaChartPie, FaDatabase, FaHome } from 'react-icons/fa';
+import { FaChartPie, FaDatabase, FaFileAlt, FaHome, FaTasks } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png'
@@ -180,61 +180,30 @@ const SidebarContent = ({ ...props }) => (
         <NavItem icon={FaHome} label="Dashboard" />
       </Link>
       {['ADMIN'].includes(props.userdata?.data?.role) &&
-        <>
-          <NavSubItem
-            label="Master"
-            icon={FaDatabase}
-            items={[
-              {
-                link: '/dashboard/master/santri',
-                label: 'Santri'
-              },
-              {
-                link: '/dashboard/master/teachers',
-                label: 'Guru'
-              },
-              {
-                link: '/dashboard/master/classes',
-                label: 'Kelas'
-              },
-              {
-                link: '/dashboard/master/subjects',
-                label: 'Mata Pelajaran'
-              },
-              {
-                link: '/dashboard/master/schoolyears',
-                label: 'Tahun Ajaran'
-              },
-              {
-                link: '/dashboard/master/schedules',
-                label: 'Jadwal'
-              },
-            ]}
-          />
-          <NavSubItem
-            label="Laporan"
-            icon={FaChartPie}
-            items={[
-              {
-                link: '/dashboard/reports/presence',
-                label: 'Presensi'
-              },
-              {
-                link: '/dashboard/reports/spp',
-                label: 'SPP'
-              },
-            ]}
-          />
-        </>
+        MenuLists.ADMIN.map((item, index) => (
+          <Fragment key={index}>
+            {item.subItems ? (
+              <NavSubItem
+                label={item.label}
+                icon={item.icon}
+                items={item.subItems}
+              />
+            ) : (
+              item.link && (
+                <Link key={index} to={item.link}>
+                  <NavItem icon={item.icon} label={item.label} />
+                </Link>
+              )
+            )}
+          </Fragment>
+        ))
       }
       {['GURU'].includes(props.userdata?.data?.role) &&
-        <>
-          {MenuLists.GURU.map((item, index) => (
-            <Link key={index} to={item.link}>
-              <NavItem icon={item.icon} label={item.label} />
-            </Link>
-          ))}
-        </>
+        MenuLists.GURU.map((item, index) => (
+          <Link key={index} to={item.link}>
+            <NavItem icon={item.icon} label={item.label} />
+          </Link>
+        ))
       }
     </Flex>
   </Box>

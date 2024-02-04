@@ -30,6 +30,10 @@ import NotFound from "./pages/errors/NotFound"
 import Classes from "./pages/dashboard/presensi/Classes"
 import Class from "./pages/dashboard/presensi/Class"
 import Student from "./pages/dashboard/student/Student"
+import AdministrationIndex from "./pages/dashboard/administrasi/AdministrationIndex"
+import AdministrationCreate from "./pages/dashboard/administrasi/AdministrationCreate"
+import LaporanSPP from "./pages/dashboard/laporan/LaporanSPP"
+import LaporanPresensi from "./pages/dashboard/laporan/LaporanPresensi"
 
 export default function App() {
   return (
@@ -44,7 +48,7 @@ export default function App() {
           <Route path="/dashboard/classes" element={<Classes />} />
           <Route path="/dashboard/classes/detail/:uuid" element={<Class />} />
           <Route path="/dashboard/presence" element={<Presensi />} />
-          <Route path="/dashboard/presence/detail/:uuid" element={<PresensiDetail />} />
+          <Route path="/dashboard/presence/detail/:uuid/:date" element={<PresensiDetail />} />
           <Route path="/dashboard/histories" element={<Histories />} />
           <Route path="/dashboard/histories/detail/:uuid" element={<History />} />
           <Route path="/dashboard/students/detail/:uuid" element={<Student />} />
@@ -67,6 +71,12 @@ export default function App() {
             <Route path="schedules" element={<ScheduleIndex />} />
             <Route path="schedules/create" element={<SchduleCreate />} />
             <Route path="schedules/detail/:uuid" element={<ScheduleDetail />} />
+          </Route>
+          <Route path="/dashboard/administration" element={<AdministrationIndex />} />
+          <Route path="/dashboard/administration/create" element={<AdministrationCreate />} />
+          <Route path="/dashboard/reports">
+            <Route path="spp" element={<LaporanSPP />} />
+            <Route path="presence" element={<LaporanPresensi />} />
           </Route>
           <Route path="/dashboard/profile" element={<ProfileIndex />} />
         </Route>

@@ -175,3 +175,21 @@ export function validateSchedule(values) {
 
   return errors;
 }
+
+export function validateAdministration(values) {
+  const errors = {};
+
+  if (!values.date) {
+    errors.date = 'Tanggal harus diisi';
+  }
+
+  if (!values.nominal) {
+    errors.nominal = 'Nominal harus diisi';
+  }
+
+  if (!values.student_uuid) {
+    errors.student_uuid = 'Pilih Santri';
+  }
+
+  return errors;
+}
