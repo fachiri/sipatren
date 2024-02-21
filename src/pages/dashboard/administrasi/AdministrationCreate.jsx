@@ -11,8 +11,12 @@ import {
 import { toast } from "react-toastify";
 import { validateAdministration } from "../../../utils/validation";
 import AdministrationForm from "./AdministrationForm";
+import fetcher from "../../../utils/fetcher";
+import useSWR from "swr";
 
 export default function AdministrationCreate() {
+  const { data: schoolFeeData, error: schoolFeeError, isLoading: schoolFeeIsLoading } = useSWR(`/school_fees/fixed`, fetcher)
+
   return (
     <>
       <DashboardLayout
@@ -38,15 +42,17 @@ export default function AdministrationCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ date: new Date().toISOString().split('T')[0], nominal: '', student_uuid: '' }}
+              initialValues={{ date: new Date().toISOString().split('T')[0], month: '', status: '', nominal: schoolFeeData?.nominal, student_uuid: '', school_year_uuid: '' }}
               validate={validateAdministration}
               onSubmit={async (values, actions) => {
                 try {
-                  const { date, nominal, student_uuid } = values
+                  const { date, month, student_uuid, status, school_year_uuid } = values
                   const { data: response } = await axios.post(`/school_fees`, {
                     date,
-                    nominal: +nominal,
-                    student_uuid
+                    month,
+                    status,
+                    student_uuid,
+                    school_year_uuid
                   });
 
                   toast.success(response.message)

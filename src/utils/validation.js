@@ -183,12 +183,34 @@ export function validateAdministration(values) {
     errors.date = 'Tanggal harus diisi';
   }
 
+  if (!values.month) {
+    errors.month = 'Bulan harus diisi';
+  }
+
   if (!values.nominal) {
     errors.nominal = 'Nominal harus diisi';
   }
 
+  if (!values.status) {
+    errors.status = 'Status harus diisi';
+  }
+
   if (!values.student_uuid) {
     errors.student_uuid = 'Pilih Santri';
+  }
+
+  if (!values.school_year_uuid) {
+    errors.school_year_uuid = 'Pilih Tahun Ajaran';
+  }
+
+  return errors;
+}
+
+export function validateSchoolFee(values) {
+  const errors = {};
+
+  if (!values.nominal) {
+    errors.nominal = 'Nominal harus diisi';
   }
 
   return errors;

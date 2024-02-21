@@ -34,6 +34,7 @@ import AdministrationIndex from "./pages/dashboard/administrasi/AdministrationIn
 import AdministrationCreate from "./pages/dashboard/administrasi/AdministrationCreate"
 import LaporanSPP from "./pages/dashboard/laporan/LaporanSPP"
 import LaporanPresensi from "./pages/dashboard/laporan/LaporanPresensi"
+import AdministrationDetail from "./pages/dashboard/administrasi/AdministrationDetail"
 
 export default function App() {
   return (
@@ -74,6 +75,7 @@ export default function App() {
           </Route>
           <Route path="/dashboard/administration" element={<AdministrationIndex />} />
           <Route path="/dashboard/administration/create" element={<AdministrationCreate />} />
+          <Route path="/dashboard/administration/detail/:uuid" element={<AdministrationDetail />} />
           <Route path="/dashboard/reports">
             <Route path="spp" element={<LaporanSPP />} />
             <Route path="presence" element={<LaporanPresensi />} />
