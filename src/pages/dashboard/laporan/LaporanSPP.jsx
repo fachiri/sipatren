@@ -102,9 +102,10 @@ export default function LaporanSPP() {
               <Thead>
                 <Tr>
                   <Th>No. </Th>
-                  <Th>Tanggal</Th>
+                  <Th>Tanggal Pembayaran</Th>
                   <Th>Bulan</Th>
                   <Th>Nominal</Th>
+                  <Th>Status</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -112,7 +113,7 @@ export default function LaporanSPP() {
                   <Tr key={idx}>
                     <Td>{idx + 1}</Td>
                     <Td>{item.tanggal.replaceAll('-', '/')}</Td>
-                    <Td>{getMonthId(item.tanggal)}</Td>
+                    <Td>{item.month}</Td>
                     <Td>
                       <NumericFormat
                         value={item.nominal}
@@ -121,6 +122,7 @@ export default function LaporanSPP() {
                         prefix={'Rp. '}
                       />
                     </Td>
+                    <Td>{item.status}</Td>
                   </Tr>
                 )) ??
                   <Tr>

@@ -19,6 +19,7 @@ export default function PresensiDetail() {
   const queryDate = `${date.split('/')[2]}-${date.split('/')[1]}-${date.split('/')[0]}`
   const modalPresensi = useDisclosure()
   const { data: scheduleData, error: scheduleError, isLoading: scheduleIsLoading } = useSWR(`/schedules/${uuid}?date=${queryDate}`, fetcher)
+  console.log(scheduleData)
   const [isCapturing, setIsCapturing] = useState(false)
 
   const webcamRef = useRef(null);
@@ -77,11 +78,11 @@ export default function PresensiDetail() {
         <Card mb={5}>
           <CardHeader display="flex" justifyContent="space-between">
             <Heading size='md'>Detail Jadwal</Heading>
-            <Flex gap={2}>
+            {/* <Flex gap={2}>
               <Link to={`/dashboard/presence/history/${uuid}`}>
                 <Button leftIcon={<FaHistory />} colorScheme="teal" size="sm">Riwayat</Button>
               </Link>
-            </Flex>
+            </Flex> */}
           </CardHeader>
           <CardBody>
             <ListDetail

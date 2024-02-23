@@ -28,10 +28,12 @@ import SchoolFeeForm from "./SchoolFeeForm";
 import { toast } from "react-toastify";
 import axios from "../../../utils/axios"
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function AdministrationIndex() {
+  const [search, setSearch] = useState('')
   // const { data: administrationData, error: administrationError, isLoading: administrationIsLoading } = useSWR(`/school_fees`, fetcher)
-  const { data: studentData, error: studentError, isLoading: studentIsLoading } = useSWR(`/master/students`, fetcher)
+  const { data: studentData, error: studentError, isLoading: studentIsLoading } = useSWR(`/master/students?search=${search}`, fetcher)
   const { data: schoolFeeData, error: schoolFeeError, isLoading: schoolFeeIsLoading } = useSWR(`/school_fees/fixed`, fetcher)
   const modalEdit = useDisclosure()
 
@@ -61,41 +63,46 @@ export default function AdministrationIndex() {
         <Card>
           <CardHeader>
             <Heading size='md' mb={5}>Riwayat Pembayaran SPP</Heading>
-            <Flex gap={5} float="right">
-              <Flex border="1px solid rgba(0, 0, 0, 0.2)" px={5} borderRadius={5} gap={5}>
-                <Text>Nominal Tetap : </Text>
-                <NumericFormat
-                  value={schoolFeeData?.nominal}
-                  displayType={'text'}
-                  thousandSeparator={true}
-                  prefix={'Rp. '}
-                />
-                <Text> / Bulan </Text>
-              </Flex>
-              <FormEdit
-                modal={modalEdit}
-                initialValues={{ nominal: schoolFeeData?.nominal }}
-                validate={validateSchoolFee}
-                onSubmit={async (values, actions) => {
-                  try {
-                    const { data: response } = await axios.put(`/school_fees/fixed`, {
-                      nominal: +values.nominal
-                    });
+            <Flex gap={5} justifyContent="space-between">
+              <Box>
+                <Input onChange={e => setSearch(e.target.value)} placeholder="Cari Siswa.." />
+              </Box>
+              <Flex gap={5} justifyContent="space-between">
+                <Flex border="1px solid rgba(0, 0, 0, 0.2)" px={5} borderRadius={5} gap={5}>
+                  <Text>Nominal Tetap : </Text>
+                  <NumericFormat
+                    value={schoolFeeData?.nominal}
+                    displayType={'text'}
+                    thousandSeparator={true}
+                    prefix={'Rp. '}
+                  />
+                  <Text> / Bulan </Text>
+                </Flex>
+                <FormEdit
+                  modal={modalEdit}
+                  initialValues={{ nominal: schoolFeeData?.nominal }}
+                  validate={validateSchoolFee}
+                  onSubmit={async (values, actions) => {
+                    try {
+                      const { data: response } = await axios.put(`/school_fees/fixed`, {
+                        nominal: +values.nominal
+                      });
 
-                    toast.success(response.message)
-                    modalEdit.onClose(true)
-                    mutate(`/school_fees/fixed`)
-                  } catch (error) {
-                    if (error.name != 'AxiosError') {
-                      toast.error(error.message)
+                      toast.success(response.message)
+                      modalEdit.onClose(true)
+                      mutate(`/school_fees/fixed`)
+                    } catch (error) {
+                      if (error.name != 'AxiosError') {
+                        toast.error(error.message)
+                      }
+                    } finally {
+                      actions.setSubmitting(false)
                     }
-                  } finally {
-                    actions.setSubmitting(false)
-                  }
-                }}
-              >
-                <SchoolFeeForm />
-              </FormEdit>
+                  }}
+                >
+                  <SchoolFeeForm />
+                </FormEdit>
+              </Flex>
             </Flex>
           </CardHeader>
           <CardBody>
