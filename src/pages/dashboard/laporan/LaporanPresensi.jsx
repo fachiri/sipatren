@@ -18,10 +18,13 @@ export default function LaporanPresensi() {
   });
 
   const [selectedWeek, setSelectedWeek] = useState(thisWeek ? JSON.stringify(thisWeek) : {})
+  const [selectedMonth, setSelectedMonth] = useState('')
+  const [selectedSchoolYear, setSelectedSchoolYear] = useState('')
   const [formatedDays, setFormatedDays] = useState(thisWeek ?? {})
   const [isDownloading, setIsDownloading] = useState(false)
 
-  const { data: scheduleData, error: scheduleError, isLoading: scheduleIsLoading } = useSWR(`/schedules`, fetcher)
+  const { data: scheduleData, isLoading: scheduleIsLoading } = useSWR(`/schedules`, fetcher)
+  const { data: schoolYearData, isLoading: schoolYearIsLoading } = useSWR(`/master/school_years`, fetcher)
 
   useEffect(() => {
     if (selectedWeek && Object.keys(selectedWeek).length !== 0) {
@@ -33,15 +36,16 @@ export default function LaporanPresensi() {
   const handleDownload = async (uuid) => {
     try {
       setIsDownloading(true)
+      const scheduleUuid = uuid
 
-      const response = await axios.get(`/pdf/absences/${uuid}`, {
+      const response = await axios.get(`/pdf/absences/${scheduleUuid}/${selectedSchoolYear}/${selectedMonth}`, {
         responseType: 'blob'
       });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Laporan-Presensi-${uuid}-${currentDateUnique()}.pdf`);
+      link.setAttribute('download', `Laporan-Presensi-${scheduleUuid}-${currentDateUnique()}.pdf`);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
@@ -75,7 +79,7 @@ export default function LaporanPresensi() {
             <Heading size='md'>Filter</Heading>
           </CardHeader>
           <CardBody>
-            <MultiSelect
+            {/* <MultiSelect
               value={selectedWeek}
               placeholder="Pilih Minggu"
               onChange={setSelectedWeek}
@@ -89,7 +93,44 @@ export default function LaporanPresensi() {
                 )
               }
               single
-            />
+            /> */}
+            <Flex gap={5}>
+              <MultiSelect
+                value={selectedMonth}
+                placeholder="Pilih Bulan"
+                onChange={setSelectedMonth}
+                options={[
+                  { value: '1', label: 'JANUARI' },
+                  { value: '2', label: 'FEBRUARI' },
+                  { value: '3', label: 'MARET' },
+                  { value: '4', label: 'APRIL' },
+                  { value: '5', label: 'MEI' },
+                  { value: '6', label: 'JUNI' },
+                  { value: '7', label: 'JULI' },
+                  { value: '8', label: 'AGUSTUS' },
+                  { value: '9', label: 'SEPTEMBER' },
+                  { value: '10', label: 'OKTOBER' },
+                  { value: '11', label: 'NOVEMBER' },
+                  { value: '12', label: 'DESEMBER' },
+                ]}
+                single
+              />
+              <MultiSelect
+                value={selectedSchoolYear}
+                placeholder="Pilih Tahun Ajaran"
+                onChange={setSelectedSchoolYear}
+                options={schoolYearData?.data?.rows?.map(e => ({
+                  value: e.uuid,
+                  label: e.name
+                }))}
+                filterFn={(options, searchText) =>
+                  options.filter(option =>
+                    option.label.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                }
+                single
+              />
+            </Flex>
           </CardBody>
         </Card>
         <Card>
@@ -102,7 +143,7 @@ export default function LaporanPresensi() {
             <Table variant='striped' colorScheme='gray'>
               <Thead>
                 <Tr>
-                  <Th>Hari Tanggal</Th>
+                  <Th>Hari</Th>
                   <Th>Jam</Th>
                   <Th>Kelas</Th>
                   <Th>Mata Pelajaran</Th>
@@ -113,7 +154,7 @@ export default function LaporanPresensi() {
                 {days.map((day, idx) =>
                   scheduleData?.data[day]?.map((item, idx) =>
                     <Tr key={idx}>
-                      <Td>{day} {formatedDays[day]}</Td>
+                      <Td>{day}</Td>
                       <Td>{item.start} - {item.end}</Td>
                       <Td>{item.class?.name}</Td>
                       <Td>{item.subject?.name}</Td>
@@ -124,11 +165,11 @@ export default function LaporanPresensi() {
                           colorScheme='teal'
                           variant='solid'
                           size='sm'
-                          isDisabled={Object.keys(selectedWeek).length == 0}
+                          isDisabled={!selectedMonth || !selectedSchoolYear}
                           isLoading={isDownloading}
                           onClick={() => handleDownload(item.uuid)}
                         >
-                          Detail
+                          Unduh
                         </Button>
                       </Td>
                     </Tr>
