@@ -1,5 +1,6 @@
 import DashboardLayout from "../../../../layouts/DashboardLayout";
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -16,8 +17,10 @@ import { toast } from "react-toastify";
 import FormDelete from "../../../../components/form/FormDelete";
 import axios from "../../../../utils/axios"
 import FormEdit from "../../../../components/form/FormEdit";
-import { validateTeacher } from "../../../../utils/validation";
+import { validateChangePassword, validateTeacher } from "../../../../utils/validation";
 import TeacherForm from "./TeacherForm";
+import FormInput from "../../../../components/form/FormInput";
+import { Form, Formik } from "formik";
 
 export default function TeacherDetail() {
   const modalDelete = useDisclosure()
@@ -49,7 +52,7 @@ export default function TeacherDetail() {
           },
         ]}
       >
-        <Card>
+        <Card mb={5}>
           <CardHeader display="flex" justifyContent="space-between">
             <Heading size='md'>Detail {teacherData?.data?.user?.nama.split(' ')[0]}</Heading>
             <Flex gap={2}>
@@ -122,6 +125,56 @@ export default function TeacherDetail() {
                 { label: 'Status Pegawai', value: teacherData?.data?.status_pegawai },
               ]}
             />
+          </CardBody>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Heading as='h4' size='md'>Form Ganti Password</Heading>
+          </CardHeader>
+          <CardBody>
+            <Formik
+              initialValues={{ new_password: '', confirm_password: '' }}
+              validate={validateChangePassword}
+              onSubmit={async (values, actions) => {
+                try {
+                  const { data: response } = await axios.put(`/users/${uuid}/change-password`, values);
+
+                  toast.success(response.message)
+                  actions.resetForm()
+                } catch (error) {
+                  if (error.name != 'AxiosError') {
+                    toast.error(error.message)
+                  }
+                } finally {
+                  actions.setSubmitting(false)
+                }
+              }}
+            >
+              {(props) => (
+                <Form>
+                  <FormInput
+                    type="password"
+                    label="Password Baru"
+                    name="new_password"
+                    placeholder="Password Baru"
+                  />
+                  <FormInput
+                    type="password"
+                    label="Konfirmasi Password"
+                    name="confirm_password"
+                    placeholder="Konfirmasi Password"
+                  />
+                  <Button
+                    mt={4}
+                    colorScheme='teal'
+                    isLoading={props.isSubmitting}
+                    type='submit'
+                  >
+                    Submit
+                  </Button>
+                </Form>
+              )}
+            </Formik>
           </CardBody>
         </Card>
       </DashboardLayout>

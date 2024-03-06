@@ -47,7 +47,7 @@ export function validateTeacher(values) {
 
   if (!values.username) {
     errors.username = 'Username harus diisi';
-  } else if (!/^\d+$/.test(values.username)) {
+  } else if (!/^\w+$/.test(values.username)) {
     errors.username = 'Username harus berupa angka tanpa spasi';
   }
 
@@ -205,6 +205,22 @@ export function validateSchoolFee(values) {
 
   if (!values.nominal) {
     errors.nominal = 'Nominal harus diisi';
+  }
+
+  return errors;
+}
+
+export function validateChangePassword(values) {
+  const errors = {};
+
+  if (!values.new_password) {
+    errors.new_password = 'Password Baru harus diisi';
+  }
+
+  if (!values.confirm_password) {
+    errors.confirm_password = 'Konfirmasi Password harus diisi';
+  } else if (values.new_password != values.confirm_password) {
+    errors.confirm_password = 'Password tidak sama';
   }
 
   return errors;

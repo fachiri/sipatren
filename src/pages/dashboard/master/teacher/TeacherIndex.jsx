@@ -67,7 +67,7 @@ export default function TeacherIndex() {
                   {teacherData?.data?.rows.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.user.nama}</Td>
-                      <Td>{item.nuptk}</Td>
+                      <Td>{item.nuptk?.length == 0 ? '-' : item.nuptk}</Td>
                       <Td>{item.jk}</Td>
                       <Td>
                         <Link to={"detail/" + item.uuid}>
