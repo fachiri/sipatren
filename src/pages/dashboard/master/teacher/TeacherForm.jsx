@@ -30,6 +30,11 @@ export default function TeacherForm() {
         name="nip"
         placeholder="NIP (Nomor Induk Pegawai)"
       />
+      <FormInput
+        label="Username"
+        name="username"
+        placeholder="Username"
+      />
       <FormSelect
         label="Jenis Kelamin"
         name="jk"
@@ -71,8 +76,8 @@ export default function TeacherForm() {
         name="status_pegawai"
         placeholder="Pilih Status Pegawai"
         options={[
-          { value: 'AKTIF', label: 'AKTIF' },
-          { value: 'NONAKTIF', label: 'NONAKTIF' },
+          { value: 'PNS', label: 'PNS' },
+          { value: 'NON PNS', label: 'NON PNS' },
         ]}
       />
     </>

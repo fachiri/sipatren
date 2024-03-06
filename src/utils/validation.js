@@ -45,16 +45,10 @@ export function validateTeacher(values) {
     errors.nama = 'Nama harus diisi';
   }
 
-  if (!values.nuptk) {
-    errors.nuptk = 'NUPTK harus diisi';
-  } else if (!/^\d+$/.test(values.nuptk)) {
-    errors.nuptk = 'NUPTK harus berupa angka tanpa spasi';
-  }
-
-  if (!values.nip) {
-    errors.nip = 'NIP harus diisi';
-  } else if (!/^\d+$/.test(values.nip)) {
-    errors.nip = 'NIP harus berupa angka tanpa spasi';
+  if (!values.username) {
+    errors.username = 'Username harus diisi';
+  } else if (!/^\d+$/.test(values.username)) {
+    errors.username = 'Username harus berupa angka tanpa spasi';
   }
 
   if (!values.jabatan) {

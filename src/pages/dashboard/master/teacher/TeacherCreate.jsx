@@ -46,12 +46,10 @@ export default function TeacherCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ nama: '', nuptk: '', nip: '', jabatan: '', total_jtm: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', no_hp: '', status_pegawai: '' }}
+              initialValues={{ nama: '', username: '', nuptk: '', nip: '', jabatan: '', total_jtm: '', jk: '', tempat_lahir: '', tanggal_lahir: '', alamat: '', no_hp: '', status_pegawai: '' }}
               validate={validateTeacher}
               onSubmit={async (values, actions) => {
                 try {
-                  values.username = values.nip
-
                   const { data: response } = await axios.post('/master/teachers', values);
 
                   toast.success(response.message)
