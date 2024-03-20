@@ -64,7 +64,7 @@ export default function SubjectIndex() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {subjectData?.data?.rows.map((item, idx) => (
+                  {subjectData?.data?.rows?.map((item, idx) => (
                     <Tr key={idx}>
                       <Td>{item.name}</Td>
                       <Td>
