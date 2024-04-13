@@ -110,7 +110,7 @@ export default function PresensiDetail() {
         <Card>
           <CardHeader display="flex" justifyContent="space-between">
             <Heading size='md'>Detail Kehadiran (
-              {scheduleData?.data?.students.filter(student => student.absence_status === 'HADIR').length ?? 0}
+              {scheduleData?.data?.students?.filter(student => student.absence_status === 'HADIR').length ?? 0}
               /
               {scheduleData?.data?.students?.length ?? 0})</Heading>
             <Button leftIcon={<FaPlay />} onClick={modalPresensi.onOpen} colorScheme="teal" size="sm">
