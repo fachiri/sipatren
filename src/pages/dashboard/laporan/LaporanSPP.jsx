@@ -91,7 +91,7 @@ export default function LaporanSPP() {
                 leftIcon={<FaPrint />}
                 colorScheme="teal"
                 isLoading={isDownloading}
-                isDisabled={!schoolFeeData?.data ?? true}
+                isDisabled={!schoolFeeData?.data}
               >
                 Download
               </Button>
