@@ -197,6 +197,15 @@ export function validateAdministration(values) {
     errors.school_year_uuid = 'Pilih Tahun Ajaran';
   }
 
+  if (!values.file) {
+    errors.file = 'Bukti Pembayaran harus diisi';
+  } else {
+    // const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+    // if (!allowedExtensions.test(values.file.name)) {
+    //   errors.file = 'Hanya file gambar yang diperbolehkan (JPG, JPEG, PNG)';
+    // }
+  }
+
   return errors;
 }
 

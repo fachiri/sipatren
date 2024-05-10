@@ -2,7 +2,7 @@ import { FormControl, FormErrorMessage, FormLabel, Input, Textarea } from "@chak
 import { Field } from "formik";
 import { NumericFormat } from "react-number-format";
 
-export default function FormInput({ label, name, placeholder, type, maxLength, format, readonly }) {
+export default function FormInput({ label, name, placeholder, type, maxLength, format, readonly, fileRef }) {
   return (
     <>
       <Field name={name}>
@@ -24,6 +24,8 @@ export default function FormInput({ label, name, placeholder, type, maxLength, f
                 placeholder={placeholder}
                 readOnly={readonly ?? false}
               />
+            ) : type === 'file' ? (
+              <Input {...field} maxLength={maxLength} placeholder={placeholder} type='file' ref={fileRef} />
             ) : (
               <Input {...field} maxLength={maxLength} placeholder={placeholder} type={type ?? "text"} />
             )}

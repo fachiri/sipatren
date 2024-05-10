@@ -202,6 +202,10 @@ export default function SantriDetail() {
               borderRadius={3}
               src={`${serverUrl}/public/avatar/${studentData?.data?.image}`}
               alt={studentData?.data?.nama}
+              onClick={() => {
+                window.open(`${serverUrl}/public/avatar/${studentData?.data?.image}`, '_blank');
+              }}
+              cursor="pointer"
             />
           </CardBody>
         </Card>

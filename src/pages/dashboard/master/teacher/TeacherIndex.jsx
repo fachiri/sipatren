@@ -1,4 +1,4 @@
-import { FaList, FaPlus } from "react-icons/fa";
+import { FaList, FaPlus, FaSearch } from "react-icons/fa";
 import DashboardLayout from "../../../../layouts/DashboardLayout";
 import {
   Table,
@@ -13,13 +13,19 @@ import {
   CardBody,
   CardHeader,
   Heading,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Flex,
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import fetcher from "../../../../utils/fetcher"
 import useSWR from 'swr'
+import { useState } from "react";
 
 export default function TeacherIndex() {
-  const { data: teacherData, error: teacherError, isLoading: teacherIsLoading } = useSWR(`/master/teachers`, fetcher)
+  const [query, setQuery] = useState('');
+  const { data: teacherData, error: teacherError, isLoading: teacherIsLoading } = useSWR(`/master/teachers?search=${query}`, fetcher)
 
   return (
     <>
@@ -50,7 +56,16 @@ export default function TeacherIndex() {
       >
         <Card>
           <CardHeader>
-            <Heading size='md'>Daftar Guru</Heading>
+            <Flex justifyContent="space-between" align="center">
+              <Heading size="md">Daftar Guru</Heading>
+              <InputGroup width={300}>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FaSearch color="gray.300" />}
+                />
+                <Input onChange={(e) => setQuery(e.target.value)} placeholder="Cari guru..." />
+              </InputGroup>
+            </Flex>
           </CardHeader>
           <CardBody>
             <TableContainer>

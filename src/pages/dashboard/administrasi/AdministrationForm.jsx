@@ -90,6 +90,12 @@ export default function ClassForm() {
         placeholder="Pilih Tahun Ajaran"
         options={getSchoolYearOptions()}
       />
+      {/* <FormInput
+        type="file"
+        label="Bukti Pembayaran"
+        name="file"
+        placeholder="Bukti Pembayaran"
+      /> */}
     </>
   )
 }

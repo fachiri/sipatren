@@ -13,9 +13,12 @@ import { validateAdministration } from "../../../utils/validation";
 import AdministrationForm from "./AdministrationForm";
 import fetcher from "../../../utils/fetcher";
 import useSWR from "swr";
+import FormInput from "../../../components/form/FormInput";
+import { useRef } from "react";
 
 export default function AdministrationCreate() {
   const { data: schoolFeeData, error: schoolFeeError, isLoading: schoolFeeIsLoading } = useSWR(`/school_fees/fixed`, fetcher)
+  const fileRef = useRef(null);
 
   return (
     <>
@@ -42,18 +45,35 @@ export default function AdministrationCreate() {
           </CardHeader>
           <CardBody>
             <Formik
-              initialValues={{ date: new Date().toISOString().split('T')[0], month: '', status: '', nominal: schoolFeeData?.nominal, student_uuid: '', school_year_uuid: '' }}
+              initialValues={{
+                date: new Date().toISOString().split('T')[0],
+                month: '',
+                status: '',
+                nominal: schoolFeeData?.nominal,
+                student_uuid: '',
+                school_year_uuid: '',
+                file: ''
+              }}
               validate={validateAdministration}
               onSubmit={async (values, actions) => {
                 try {
-                  const { date, month, student_uuid, status, school_year_uuid } = values
-                  const { data: response } = await axios.post(`/school_fees`, {
-                    date,
-                    month,
-                    status,
-                    student_uuid,
-                    school_year_uuid
-                  });
+                  const { date, month, student_uuid, status, school_year_uuid, file } = values;
+
+                  const formData = new FormData();
+                  formData.append('date', date);
+                  formData.append('month', month);
+                  formData.append('status', status);
+                  formData.append('student_uuid', student_uuid);
+                  formData.append('school_year_uuid', school_year_uuid);
+                  formData.append('file', fileRef.current.files[0]);
+
+                  const { data: response } = await axios.post(`/school_fees`, formData,
+                    {
+                      headers: {
+                        'Content-Type': 'multipart/form-data' // Set content type to multipart/form-data
+                      }
+                    }
+                  );
 
                   toast.success(response.message)
                   actions.resetForm()
@@ -67,8 +87,15 @@ export default function AdministrationCreate() {
               }}
             >
               {(props) => (
-                <Form>
+                <Form encType="multipart/form-data">
                   <AdministrationForm />
+                  <FormInput
+                    type="file"
+                    label="Bukti Pembayaran"
+                    name="file"
+                    placeholder="Bukti Pembayaran"
+                    fileRef={fileRef}
+                  />
                   <Button
                     mt={4}
                     colorScheme='teal'

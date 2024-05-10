@@ -1,4 +1,4 @@
-import { FaList, FaPlus } from "react-icons/fa";
+import { FaList, FaPlus, FaSearch } from "react-icons/fa";
 import DashboardLayout from "../../../../layouts/DashboardLayout";
 import {
   Table,
@@ -13,13 +13,21 @@ import {
   CardBody,
   CardHeader,
   Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Flex,
+  Select,
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom";
 import fetcher from "../../../../utils/fetcher"
 import useSWR from 'swr'
+import { useState } from "react";
 
 export default function SantriIndex() {
-  const { data: studentData, error: studentError, isLoading: studentIsLoading } = useSWR(`/master/students`, fetcher)
+  const [query, setQuery] = useState('');
+  const { data: studentData, error: studentError, isLoading: studentIsLoading } = useSWR(`/master/students?search=${query}`, fetcher)
+  const { data: classData, error: classError, isLoading: classIsLoading } = useSWR(`/master/classes`, fetcher)
 
   return (
     <>
@@ -50,7 +58,23 @@ export default function SantriIndex() {
       >
         <Card>
           <CardHeader>
-            <Heading size='md'>Daftar Santri</Heading>
+            <Flex justifyContent="space-between" align="center">
+              <Heading size="md">Daftar Santri</Heading>
+              <Flex gap={3}>
+                <Select width={300} placeholder='Pilih Kelas' onChange={(e) => setQuery(e.target.value)}>
+                  {classData?.data?.rows.map((item, idx) => (
+                    <option key={idx} value={item.name}>{item.name}</option>
+                  ))}
+                </Select>
+                <InputGroup width={300}>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<FaSearch color="gray.300" />}
+                  />
+                  <Input onChange={(e) => setQuery(e.target.value)} placeholder="Cari santri..." />
+                </InputGroup>
+              </Flex>
+            </Flex>
           </CardHeader>
           <CardBody>
             <TableContainer>
